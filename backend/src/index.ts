@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { sign, verify } from 'hono/jwt'
 import { hashPassword, verifyPassword } from './utils/crypto'
+import { user } from './routes/user'
 
 
 const app = new Hono<{
@@ -14,9 +15,18 @@ const app = new Hono<{
     userId: string
     prisma: PrismaClient
   }
-}>()
+}>().basePath('/api/v1')
 
 //middleware
+app.use('*', async (c, next) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate())
+  //@ts-ignore
+  c.set('prisma', prisma)
+  await next()
+})
+
 app.use('/api/v1/blog/*' ,async (c, next) => {
   const jwt = c.req.header('Authorization')
   if (!jwt) {
@@ -33,38 +43,9 @@ app.use('/api/v1/blog/*' ,async (c, next) => {
   await next()
 })
 
-app.use('*', async (c, next) => {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate())
-  //@ts-ignore
-  c.set('prisma', prisma)
-  await next()
-})
+app.route('/user', user)
 
-app.post('/api/v1/user/signup', async (c) => {
-  // const prisma = new PrismaClient({
-  //   datasourceUrl: c.env.DATABASE_URL,
-  // }).$extends(withAccelerate())
-  const prisma = c.get('prisma')
-  const body = await c.req.json()
-  // hash password
-  const hashedPassword = await hashPassword(body.password)
-  try {
-    const user = await prisma.user.create({
-      data: {
-        email: body.email,
-        password: hashedPassword,
-      }
-    })
-    const token = await sign({ id: user.id }, c.env.JWT_SECRET)
-    return c.json({ message: 'User signed up!', token })
-  } catch (error) {
-    return c.json({ message: 'User already exists!' }, 403)
-  }
-})
-
-app.post('/api/v1/user/signin', async (c) => {
+app.post('/user/signin', async (c) => {
   // const prisma = new PrismaClient({
   //   datasourceUrl: c.env.DATABASE_URL,
   // }).$extends(withAccelerate())
@@ -86,20 +67,20 @@ app.post('/api/v1/user/signin', async (c) => {
   return c.json({ message: 'User signed in!', token })
 })
 
-app.post('/api/v1/blog', (c) => {
+app.post('/blog', (c) => {
   console.log(c.get('userId'));
   return c.json({ message: 'Authenticated route' })
 })
 
-app.put('/api/v1/blog', (c) => {
+app.put('/blog', (c) => {
   return c.json({ message: 'Blog updated!' })
 })
 
-app.get('/api/v1/blog/:id', (c) => {
+app.get('/blog/:id', (c) => {
   return c.json({ message: 'Blog fetched!' })
 })
 
-app.get('/api/v1/blog/bulk', (c) => {
+app.get('/blog/bulk', (c) => {
   return c.json({ message: 'Blogs fetched!' })
 })
 
