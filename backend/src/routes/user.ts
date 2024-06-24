@@ -1,13 +1,12 @@
 import { Hono } from 'hono'
-import { sign, verify } from 'hono/jwt'
+import { sign } from 'hono/jwt'
 import { hashPassword, verifyPassword } from '../utils/crypto'
+import { HonoBindings } from '../config/types'
 
-export const user = new Hono()
+export const userRouter = new Hono<HonoBindings>()
 
-user.post('/user/signup', async (c) => {
-    // const prisma = new PrismaClient({
-    //   datasourceUrl: c.env.DATABASE_URL,
-    // }).$extends(withAccelerate())
+userRouter.post('/signup', async (c) => {
+    //@ts-ignore
     const prisma = c.get('prisma')
     const body = await c.req.json()
     // hash password
@@ -24,5 +23,25 @@ user.post('/user/signup', async (c) => {
     } catch (error) {
       return c.json({ message: 'User already exists!' }, 403)
     }
+})
+
+userRouter.post('/user/signin', async (c) => {
+    //@ts-ignore
+    const prisma = c.get('prisma')
+    const body = await c.req.json()
+    const user = await prisma.user.findUnique({
+      where: {
+        email: body.email,
+      }
+    })
+    if (!user) {
+      return c.json({ message: 'User not found!' }, 403)
+    }
+    const passwordMatch = await verifyPassword(user.password, body.password)
+    if (!passwordMatch) {
+      return c.json({ message: 'Invalid password!' }, 403)
+    }
+    const token = await sign({ id: user.id }, c.env.JWT_SECRET)
+    return c.json({ message: 'User signed in!', token })
   })
 
