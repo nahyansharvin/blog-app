@@ -1,7 +1,5 @@
 import { Hono } from 'hono'
 import { HonoBindings } from '../config/types'
-import { withAccelerate } from '@prisma/extension-accelerate'
-import { PrismaClient } from '@prisma/client/edge'
 
 export const blogRouter = new Hono<HonoBindings>()
 
@@ -16,6 +14,7 @@ blogRouter.post('/', async (c) => {
                 title: body.title,
                 content: body.content,
                 authorId: userId,
+                thumbnail: body.thumbnail
             }
         })
         return c.json({ message: 'Blog created!', id: post.id })
@@ -38,6 +37,7 @@ blogRouter.put('/', async (c) => {
             data: {
                 title: body.title,
                 content: body.content,
+                thumbnail: body.thumbnail
             }
         })
         return c.json({ message: 'Blog updated!', id: post.id})
@@ -55,26 +55,29 @@ blogRouter.get('/:id', async (c) => {
 
     try {
         const post = await prisma.post.findUnique({
-            where: { id: id }
+            where: { id: id },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    }
+                }
+            }
         })
         return c.json({ blog: post })
     } catch (error) {
-        return c.json({ message: 'Blog not found!' }, 404)
+        return c.json({ message: 'Blog not found!', error }, 404)
     }
 })
 
 blogRouter.get('/bulk', async (c) => {
     //@ts-ignore
-    // const prisma = c.get('prisma')
-    const prisma = new PrismaClient({
-        datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate())
-
-    console.log("ivdethi");
-    
+    const prisma = c.get('prisma')    
 
     try {
-        const posts = await prisma.post.findMany({})
+        const posts = await prisma.post.findMany()
         return c.json({ blogs: posts })
     } catch (error) {
         return c.json({ message: 'Blogs not found!' }, 404)
