@@ -1,13 +1,15 @@
-// import { Button } from './components/ui/button'
-import { Button } from '@/components/ui/button'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
+import Signup from './pages/Signup'
 
 function App() {
 
   return (
-    <>
-      <h1 className="text-red-600">blog App</h1>
-      <Button>Click me</Button>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Signup />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
