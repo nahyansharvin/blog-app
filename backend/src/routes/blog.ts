@@ -1,7 +1,11 @@
 import { Hono } from 'hono'
 import { HonoBindings } from '../config/types'
+import { authMiddleware } from '../middlewares/auth'
 
 export const blogRouter = new Hono<HonoBindings>()
+
+// middlewares
+blogRouter.use('*' , authMiddleware )
 
 blogRouter.post('/', async (c) => {
     //@ts-ignore

@@ -9,7 +9,6 @@ const app = new Hono<HonoBindings>().basePath('/api/v1')
 
 //middlewares
 app.use('*', prismaMiddleware )
-app.use('/blog/*' , authMiddleware )
 
 app.route('/user', userRouter)
 app.route('/blog', blogRouter)
