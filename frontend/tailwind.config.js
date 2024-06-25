@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        heading: ['Yeseva-One']
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
