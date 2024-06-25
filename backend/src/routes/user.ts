@@ -25,7 +25,7 @@ userRouter.post('/signup', async (c) => {
     }
 })
 
-userRouter.post('/user/signin', async (c) => {
+userRouter.post('/signin', async (c) => {
     //@ts-ignore
     const prisma = c.get('prisma')
     const body = await c.req.json()
