@@ -4,6 +4,18 @@ import { authMiddleware } from '../middlewares/auth'
 
 export const blogRouter = new Hono<HonoBindings>()
 
+blogRouter.get('/bulk', async (c) => {
+    //@ts-ignore
+    const prisma = c.get('prisma')    
+
+    try {
+        const posts = await prisma.post.findMany()
+        return c.json({ blogs: posts })
+    } catch (error) {
+        return c.json({ message: 'Blogs not found!' }, 404)
+    }
+})
+
 // middlewares
 blogRouter.use('*' , authMiddleware )
 
@@ -55,8 +67,6 @@ blogRouter.get('/:id', async (c) => {
     const prisma = c.get('prisma')
     const id = c.req.param('id')
 
-    console.log("id", id);
-
     try {
         const post = await prisma.post.findUnique({
             where: { id: id },
@@ -73,17 +83,5 @@ blogRouter.get('/:id', async (c) => {
         return c.json({ blog: post })
     } catch (error) {
         return c.json({ message: 'Blog not found!', error }, 404)
-    }
-})
-
-blogRouter.get('/bulk', async (c) => {
-    //@ts-ignore
-    const prisma = c.get('prisma')    
-
-    try {
-        const posts = await prisma.post.findMany()
-        return c.json({ blogs: posts })
-    } catch (error) {
-        return c.json({ message: 'Blogs not found!' }, 404)
     }
 })
