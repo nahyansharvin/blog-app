@@ -3,7 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
-import { HomePage, Signup, Signin, BlogView, ErrorPage } from 'Pages/index'
+import { HomePage, Signup, Signin, BlogView, ErrorPage, CreateBlog } from 'Pages/index'
 import AuthLayout from './Layout/AuthLayout'
 
 const router = createBrowserRouter([
@@ -16,9 +16,25 @@ const router = createBrowserRouter([
         path: '/',
         element: <HomePage />,
       },
-      
+      {
+        path: '/blog/:id',
+        element: <BlogView />,
+      },
+      {
+        path: "/write",
+        element: <CreateBlog />
+      }
+
     ]
   },
+  {
+    path: '/signup',
+    element: <Signup />,
+  },
+  {
+    path: '/signin',
+    element: <Signin />,
+  }
 ])
 
 
