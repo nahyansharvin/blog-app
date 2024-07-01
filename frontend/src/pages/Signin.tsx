@@ -1,8 +1,26 @@
 import { Input } from "Components/ui/input"
 import { Button } from "Components/ui/button"
 import Quote from "../assets/quote.svg"
+import { FormEvent, useState } from "react"
+import { signIn } from "@/services/AuthService"
+import { handleApiError } from "@/lib/handleApiError"
 
 export function Signin() {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+
+    const handleSignin = async (e : FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        try{
+            const response = await signIn({ email, password })
+            if(response.token){
+                console.log("Signin successful")
+            }
+        } catch (error) {
+            handleApiError(error)
+        }
+    }
+
     return (
         <div className="flex min-h-screen">
             <div className="flex flex-1">
@@ -14,18 +32,18 @@ export function Signin() {
                             SignUp
                         </a>
                     </p>
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={handleSignin}>
                         <div>
                             <label htmlFor="email" className="block mb-1 font-medium">
                                 Email
                             </label>
-                            <Input id="email" placeholder="m@example.com" type="email" />
+                            <Input id="email" placeholder="m@example.com" type="email" onChange={e => setEmail(e.target.value)} />
                         </div>
                         <div>
                             <label htmlFor="password" className="block mb-1 font-medium">
                                 Password
                             </label>
-                            <Input id="password" placeholder="Enter your password" type="password" />
+                            <Input id="password" placeholder="Enter your password" type="password" onChange={e => setPassword(e.target.value)} />
                         </div>
                         <Button className="w-full mt-4" variant="default">
                             Sign In
