@@ -1,8 +1,29 @@
+import { FormEvent, useState } from "react"
 import { Input } from "Components/ui/input"
 import { Button } from "Components/ui/button"
+import { Success } from "@/lib/toast"
+import { handleApiError } from "@/lib/handleApiError"
+import { signUp } from "@/services/AuthService"
 import Quote from "../assets/quote.svg"
 
+
 export function Signup() {
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    
+    const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        try {
+            const response = await signUp({ username, email, password })
+            if (response.token) {
+                Success("Account created successfully")
+            }
+        } catch (error) {
+            handleApiError(error)
+        }
+    }
+
     return (
         <div className="flex min-h-screen">
             <div className="flex flex-1">
@@ -10,30 +31,30 @@ export function Signup() {
                     <h1 className="mb-2 text-3xl font-bold">Create an account</h1>
                     <p className="mb-6 text-gray-500">
                         Already have an account?{" "}
-                        <a href="#" className="text-blue-500">
+                        <a href="/signin" className="text-blue-500">
                             Login
                         </a>
                     </p>
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={handleSignup} >
                         <div>
                             <label htmlFor="username" className="block mb-1 font-medium">
                                 Username
                             </label>
-                            <Input id="username" placeholder="Enter your username" />
+                            <Input id="username" placeholder="Enter your username" onChange={e => setUsername(e.target.value)} />
                         </div>
                         <div>
                             <label htmlFor="email" className="block mb-1 font-medium">
                                 Email
                             </label>
-                            <Input id="email" placeholder="m@example.com" type="email" />
+                            <Input id="email" placeholder="m@example.com" type="email" onChange={e => setEmail(e.target.value)} />
                         </div>
                         <div>
                             <label htmlFor="password" className="block mb-1 font-medium">
                                 Password
                             </label>
-                            <Input id="password" placeholder="Enter your password" type="password" />
+                            <Input id="password" placeholder="Enter your password" type="password" onChange={e => setPassword(e.target.value)} />
                         </div>
-                        <Button className="w-full mt-4" variant="default">
+                        <Button className="w-full mt-4" variant="default" type="submit">
                             Sign Up
                         </Button>
                     </form>

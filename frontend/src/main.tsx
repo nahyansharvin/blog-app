@@ -5,6 +5,7 @@ import './index.css'
 
 import { HomePage, Signup, Signin, BlogView, ErrorPage, CreateBlog } from 'Pages/index'
 import AuthLayout from './Layout/AuthLayout'
+import { Toaster } from 'react-hot-toast'
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <Toaster />
     <RouterProvider router={router} />
   </React.StrictMode>,
 )
