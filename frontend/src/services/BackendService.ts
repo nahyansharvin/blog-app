@@ -20,8 +20,6 @@ const post = async (url: string, data = {}, headers = {}, params = {}) => {
         data,
         _generateParams(headers, params)
     )
-    console.log("BackendServiceResp Kitty ")
-    console.log("BackendServiceResp >> ", response)
     return response?.data
 }
 
