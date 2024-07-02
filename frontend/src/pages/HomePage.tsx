@@ -1,28 +1,46 @@
+import { handleApiError } from "@/lib/handleApiError"
+import { Blog } from "@/lib/types"
+import { getAllBlogs } from "@/services/BlogService"
 import { Card, CardContent } from "Components/ui/card"
-import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationEllipsis, PaginationNext } from "Components/ui/pagination"
+// import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationEllipsis, PaginationNext } from "Components/ui/pagination"
+import { useEffect, useState } from "react"
 
 export function HomePage() {
+  const [blogs, setBlogs] = useState<Blog[]>([])
+
+  const fetchBlogs = async () => {
+    try {
+      const response = await getAllBlogs()
+      setBlogs(response.blogs)
+    } catch (error) {
+      handleApiError(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchBlogs()
+  }, [])
+
   return (
     <div className="flex-1 py-8 px-6 md:px-8 lg:px-12">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {[...Array(12)].map((_, index) => (
+        {blogs.map((blog, index) => (
           <Card key={index} className="shadow-md">
             <img
-              src="/placeholder.svg"
-              alt={`Blog Post ${index + 1}`}
+              src={blog.thumbnail ? blog.thumbnail : "/placeholder.svg"}
+              alt="Blog Post"
               width={400}
               height={225}
               className="w-full h-48 object-cover"
             />
             <CardContent className="p-4">
-              <h2 className="text-xl font-bold mb-2">Blog Post {index + 1}</h2>
+              <h2 className="text-xl font-bold mb-2">{blog.title}</h2>
               <p className="text-muted-foreground line-clamp-3 mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec ultricies lacus, nisl
-                nec ultricies lacus, nisl nec ultricies lacus.
+                {blog.content.substring(0, 140) + "..."}
               </p>
               <a
                 href="#"
-                className="inline-flex items-center text-primary hover:text-primary-foreground"
+                className="inline-flex items-center text-primary hover:text-blue-800"
               >
                 Read More
                 <ArrowRightIcon className="w-4 h-4 ml-1" />
@@ -31,7 +49,7 @@ export function HomePage() {
           </Card>
         ))}
       </div>
-      <div className="container mx-auto mt-8">
+      {/* <div className="container mx-auto mt-8">
         <Pagination>
           <PaginationContent>
             <PaginationItem>
@@ -56,7 +74,7 @@ export function HomePage() {
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-      </div>
+      </div> */}
     </div>
   )
 }
@@ -77,28 +95,6 @@ function ArrowRightIcon(props: any) {
     >
       <path d="M5 12h14" />
       <path d="m12 5 7 7-7 7" />
-    </svg>
-  )
-}
-
-
-function MenuIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
     </svg>
   )
 }
