@@ -2,8 +2,30 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { FormEvent, useState } from "react"
+import { createBlog } from "@/services/BlogService"
+import { handleApiError } from "@/lib/handleApiError"
+import { Error, Success } from "@/lib/toast"
 
 export function CreateBlog() {
+  const [title, setTitle] = useState("")
+  const [content, setContent] = useState("")
+  const [thumbnail, setThumbnail] = useState("")
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!title || !content || !thumbnail) {
+      return Error("Please fill in all fields")
+    }
+    try {
+      const response = await createBlog({ title, content, thumbnail })
+      Success("Blog post created successfully")
+      if (response.id) window.location.href = `/blog/${response.id}`
+    } catch (error) {
+      handleApiError(error)
+    }
+  }
+
   return (
     <div className="container mx-auto px-4 py-12 md:px-6 lg:py-16">
       <div className="mx-auto max-w-3xl space-y-6">
@@ -11,17 +33,23 @@ export function CreateBlog() {
           <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">Create a new blog post</h1>
           <p className="text-muted-foreground">Share your thoughts and ideas with the world.</p>
         </div>
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="grid gap-4">
             <div>
               <Label htmlFor="title">Title</Label>
-              <Input id="title" placeholder="Enter a title for your blog post" className="mt-1" />
+              <Input id="title" placeholder="Enter a title for your blog post" className="mt-1" onChange={e => setTitle(e.target.value)} />
             </div>
             <div>
               <Label htmlFor="content">Content</Label>
-              <Textarea id="content" placeholder="Write the content of your blog post" className="mt-1 h-40" />
+              <Textarea id="content" placeholder="Write the content of your blog post" className="mt-1 h-40" onChange={e => setContent(e.target.value)} />
             </div>
             <div>
+              <Label htmlFor="thumbnail">Thumbnail</Label>
+              <div className="mt-1 flex items-center gap-2">
+                <Input id="thumbnail" placeholder="Paste image url here" className="mt-1" onChange={e => setThumbnail(e.target.value)} />
+              </div>
+            </div>
+            {/* <div>
               <Label htmlFor="thumbnail">Thumbnail</Label>
               <div className="mt-1 flex items-center gap-2">
                 <Input id="thumbnail" type="file" accept="image/*" className="flex-1" />
@@ -29,7 +57,7 @@ export function CreateBlog() {
                   <UploadIcon className="h-5 w-5" />
                 </Button>
               </div>
-            </div>
+            </div> */}
           </div>
           <Button type="submit" className="w-full">
             Publish Blog Post
