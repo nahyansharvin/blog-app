@@ -11,3 +11,7 @@ export const signUp = ({ username, email, password }: any) => {
 export const signOut = () => {
     return BackendService.post("/auth/signout");
 }
+
+export const getUser = () => {
+    return BackendService.get("/auth/me");
+}
