@@ -16,3 +16,13 @@ export type SingleBlogResponse = {
         }
     }
 }
+
+export type BulkBlogResponse = {
+    blogs: Blog[]
+}
+
+export type WriteBlogRequest = {
+    title: string
+    content: string
+    thumbnail: string
+}
