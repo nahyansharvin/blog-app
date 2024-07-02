@@ -4,6 +4,7 @@ import { deleteCookie, setCookie } from 'hono/cookie'
 import { hashPassword, verifyPassword } from '../utils/crypto'
 import { HonoBindings } from '../config/types'
 import { COOKIES } from '../config/constants'
+import { authMiddleware } from '../middlewares/auth'
 
 export const authRouter = new Hono<HonoBindings>()
 
@@ -52,5 +53,22 @@ authRouter.post('/signin', async (c) => {
 authRouter.post('/signout', async (c) => {
   deleteCookie(c, COOKIES.AUTHORIZATION, {secure: true} )
   return c.json({ message: 'User signed out!' })
+})
+
+authRouter.use(authMiddleware)
+authRouter.get('/me', async (c) => {
+  const prisma = c.get('prisma')
+  const userId = c.get('userId')
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    }
+  })
+  return c.json(user)
 })
 
