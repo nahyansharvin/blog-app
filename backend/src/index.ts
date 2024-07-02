@@ -12,7 +12,7 @@ const app = new Hono<HonoBindings>().basePath('/api/v1')
 app.use('*', prismaMiddleware )
 app.use('*', cors())
 
-app.route('/user', userRouter)
+app.route('/auth', userRouter)
 app.route('/blog', blogRouter)
 
 
