@@ -31,7 +31,7 @@ export function Signup() {
                     <h1 className="mb-2 text-3xl font-bold">Create an account</h1>
                     <p className="mb-6 text-gray-500">
                         Already have an account?{" "}
-                        <a href="/signin" className="text-blue-500">
+                        <a href="/" className="text-blue-500">
                             Login
                         </a>
                     </p>
