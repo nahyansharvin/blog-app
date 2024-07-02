@@ -44,11 +44,9 @@ const destoy = async (url: string, headers = {}, params = {}) => {
 
 // This function will be used to generate the headers and params for each request
 const _generateParams = (headers = {}, params = {}) => {
-    // const authToken = getCookie(STORAGE_KEYS.TOKEN);
-    const authToken = "token"
     
     const localHeader = {
-    //   Authorization: authToken,
+    //   Authorization: authToken, implemeted in backend
       ...headers
     }
   
