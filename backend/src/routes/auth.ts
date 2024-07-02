@@ -21,7 +21,7 @@ authRouter.post('/signup', async (c) => {
       }
     })
     const token = await sign({ id: user.id }, c.env.JWT_SECRET)
-    setCookie(c, COOKIES.AUTHORIZATION, token, { httpOnly: true, path: '/blog'})
+    setCookie(c, COOKIES.AUTHORIZATION, token, { httpOnly: true, sameSite: c.env.NODE_ENV === 'production' ? 'lax' : 'none', secure: true })
     return c.json({ message: 'User signed up!' })
   } catch (error) {
     return c.json({ message: 'User already exists!' }, 403)
@@ -45,12 +45,12 @@ authRouter.post('/signin', async (c) => {
     return c.json({ message: 'Invalid password!' }, 403)
   }
   const token = await sign({ id: user.id }, c.env.JWT_SECRET)
-  setCookie(c, COOKIES.AUTHORIZATION, token, { httpOnly: true, path: '/blog'})
+  setCookie(c, COOKIES.AUTHORIZATION, token, { httpOnly: true, sameSite: c.env.NODE_ENV === 'production' ? 'lax' : 'none', secure: true })
   return c.json({ message: 'User signed in!' })
 })
 
 authRouter.post('/signout', async (c) => {
-  deleteCookie(c, COOKIES.AUTHORIZATION, {path: '/blog'})
+  deleteCookie(c, COOKIES.AUTHORIZATION, {secure: true} )
   return c.json({ message: 'User signed out!' })
 })
 
