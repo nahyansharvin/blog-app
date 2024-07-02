@@ -10,7 +10,9 @@ const app = new Hono<HonoBindings>().basePath('/api/v1')
 
 //middlewares
 app.use('*', prismaMiddleware )
-app.use('*', cors())
+app.use(cors({origin(_origin, c) {
+    return c.env.FRONTEND_URL
+}, credentials: true}))
 
 app.route('/auth', authRouter)
 app.route('/blog', blogRouter)

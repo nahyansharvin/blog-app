@@ -4,6 +4,7 @@ const baseUrl = import.meta.env.VITE_BASE_URL
 
 const axiosInstance = axios.create({
     baseURL: `${baseUrl}/api/v1`,
+    withCredentials: true
 })
 
 const get = async (url: string, headers = {}, params = {}) => {
@@ -47,7 +48,7 @@ const _generateParams = (headers = {}, params = {}) => {
     const authToken = "token"
     
     const localHeader = {
-      Authorization: authToken,
+    //   Authorization: authToken,
       ...headers
     }
   
