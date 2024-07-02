@@ -39,7 +39,7 @@ export function HomePage() {
                 {blog.content.substring(0, 140) + "..."}
               </p>
               <a
-                href="#"
+                href={`/blog/${blog.id}`}
                 className="inline-flex items-center text-primary hover:text-blue-800"
               >
                 Read More
