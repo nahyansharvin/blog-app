@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom"
+
 export function ErrorPage() {
+  const navigate = useNavigate()
+  
   return (
     <div className="flex flex-col items-center justify-center h-[100dvh] bg-background">
       <div className="max-w-md text-center space-y-4">
@@ -8,7 +12,7 @@ export function ErrorPage() {
           The page you were looking for doesn't exist. It might have been removed or renamed.
         </p>
         <a
-          href="/"
+          onClick={() => navigate("/")}
           className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
         >
           Go to Home

@@ -4,18 +4,27 @@ import Quote from "../assets/quote.svg"
 import { FormEvent, useState } from "react"
 import { signIn } from "@/services/AuthService"
 import { handleApiError } from "@/lib/handleApiError"
+import { useRecoilState } from "recoil"
+import { authAtom } from "@/store/authAtom"
+import { Success } from "@/lib/toast"
+import { useNavigate } from "react-router-dom"
 
 export function Signin() {
+    const navigate = useNavigate()
+    const [authState, setAuthState] = useRecoilState(authAtom)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
     const handleSignin = async (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try{
-            const response = await signIn({ email, password })
-            if(response.token){
-                console.log("Signin successful")
-            }
+            await signIn({ email, password })
+            navigate("/")
+            Success("Signed in")
+            setAuthState({
+                ...authState,
+                isAuthenticated: true
+            })
         } catch (error) {
             handleApiError(error)
         }
@@ -28,7 +37,7 @@ export function Signin() {
                     <h1 className="mb-2 text-3xl font-bold">Login to your account</h1>
                     <p className="mb-6 text-gray-500">
                         Dont have an account?{" "}
-                        <a href="#" className="text-blue-500">
+                        <a onClick={() => navigate("/signup")} className="text-blue-500 cursor-pointer">
                             SignUp
                         </a>
                     </p>
