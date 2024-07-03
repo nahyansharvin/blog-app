@@ -10,7 +10,8 @@ const app = new Hono<HonoBindings>().basePath('/api/v1')
 
 //middlewares
 app.use('*', prismaMiddleware )
-app.use(cors({origin(_origin, c) {
+app.use(cors({origin(origin, c) {
+    if (origin.endsWith("nahyan-sharvins-projects.vercel.app")) return origin
     return c.env.FRONTEND_URL
 }, credentials: true}))
 
