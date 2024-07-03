@@ -7,8 +7,10 @@ import { handleApiError } from "@/lib/handleApiError"
 import { useRecoilState } from "recoil"
 import { authAtom } from "@/store/authAtom"
 import { Success } from "@/lib/toast"
+import { useNavigate } from "react-router-dom"
 
 export function Signin() {
+    const navigate = useNavigate()
     const [authState, setAuthState] = useRecoilState(authAtom)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -17,6 +19,7 @@ export function Signin() {
         e.preventDefault()
         try{
             await signIn({ email, password })
+            navigate("/")
             Success("Signed in")
             setAuthState({
                 ...authState,
