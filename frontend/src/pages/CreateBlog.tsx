@@ -6,8 +6,10 @@ import { FormEvent, useState } from "react"
 import { createBlog } from "@/services/BlogService"
 import { handleApiError } from "@/lib/handleApiError"
 import { Error, Success } from "@/lib/toast"
+import { useNavigate } from "react-router-dom"
 
 export function CreateBlog() {
+  const navigate = useNavigate()
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
@@ -20,7 +22,7 @@ export function CreateBlog() {
     try {
       const response = await createBlog({ title, content, thumbnail })
       Success("Blog post created successfully")
-      if (response.id) window.location.href = `/blog/${response.id}`
+      if (response.id) navigate(`/blog/${response.id}`)
     } catch (error) {
       handleApiError(error)
     }
