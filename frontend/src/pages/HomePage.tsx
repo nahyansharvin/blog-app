@@ -1,11 +1,14 @@
 import { handleApiError } from "@/lib/handleApiError"
 import { Blog } from "@/lib/types"
 import { getAllBlogs } from "@/services/BlogService"
+import { authAtom } from "@/store/authAtom"
 import { Card, CardContent } from "Components/ui/card"
 // import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationEllipsis, PaginationNext } from "Components/ui/pagination"
 import { useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 
 export function HomePage() {
+  const { isAuthenticated } = useRecoilValue(authAtom)
   const [blogs, setBlogs] = useState<Blog[]>([])
 
   const fetchBlogs = async () => {
@@ -23,6 +26,17 @@ export function HomePage() {
 
   return (
     <div className="flex-1 py-8 px-6 md:px-8 lg:px-12">
+      {isAuthenticated && (
+        <div className="fixed bottom-6 right-4">
+          <div
+            className="absolute transitiona-all duration-1000 opacity-50 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt">
+          </div>
+          <a href="/write" title="Write new blog"
+            className="relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-gray-900 transition-all duration-200 bg-white font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+            role="button">Write new blog
+          </a>
+        </div>
+      )}
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {blogs.map((blog, index) => (
           <Card key={index} className="shadow-md">
