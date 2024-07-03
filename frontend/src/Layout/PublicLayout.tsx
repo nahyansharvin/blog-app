@@ -11,7 +11,7 @@ const PublicLayout = () => {
                 <div className="container mx-auto flex items-center justify-between">
                     <div className="flex items-end gap-1">
                         <img src={Logo} className="h-9" />
-                        <a href="#" className="text-2xl font-bold text-[#cbd1e6]">
+                        <a href="/" className="text-2xl font-bold text-[#cbd1e6]">
                             Blogg
                         </a>
                     </div>
