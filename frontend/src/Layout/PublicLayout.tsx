@@ -6,7 +6,7 @@ const PublicLayout = () => {
     const navigate = useNavigate()
 
     return (
-        <>
+        <div className='min-h-screen flex flex-col'>
             <header className="bg-primary text-primary-foreground py-4 md:px-8 lg:px-12 shadow">
                 <div className="container mx-auto flex items-center justify-between">
                     <div className="flex items-end gap-1">
@@ -23,12 +23,12 @@ const PublicLayout = () => {
             <main>
                 <Outlet />
             </main>
-            <footer className="bg-muted text-muted-foreground py-4 px-6 md:px-8 lg:px-12 mt-auto">
+            <footer className=" bottom-0 w-full bg-muted text-muted-foreground py-4 px-6 md:px-8 lg:px-12 mt-auto">
                 <div className="container mx-auto text-center">
                     <p>&copy; 2024 Blog Website. All rights reserved.</p>
                 </div>
             </footer>
-        </>
+        </div>
     )
 }
 
