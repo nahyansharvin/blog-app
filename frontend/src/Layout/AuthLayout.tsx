@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import Logo from '../assets/Logo.svg'
 import Profile from '../assets/Profile.svg'
 import { useRecoilState, useResetRecoilState } from 'recoil'
@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 
 const AuthLayout = () => {
+    const navigate = useNavigate()
     const [authState, setAuthState] = useRecoilState(authAtom)
     const resetAuthState = useResetRecoilState(authAtom)
 
@@ -31,7 +32,7 @@ const AuthLayout = () => {
             await signOut()
             Success("Logged out successfully")
             resetAuthState()
-            document.location.href = "/"
+            navigate("/")
         } catch (error) {
             handleApiError(error)
         }
@@ -47,7 +48,7 @@ const AuthLayout = () => {
                 <div className="container mx-auto flex items-center justify-between">
                     <div className="flex items-end gap-1">
                         <img src={Logo} className="h-9" />
-                        <a href="/" className="text-2xl font-bold text-[#cbd1e6]">
+                        <a onClick={() => navigate("/")} className="text-2xl font-bold text-[#cbd1e6]">
                             Blogg
                         </a>
                     </div>

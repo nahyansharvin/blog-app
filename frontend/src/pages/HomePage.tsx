@@ -5,9 +5,11 @@ import { authAtom } from "@/store/authAtom"
 import { Card, CardContent } from "Components/ui/card"
 // import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationEllipsis, PaginationNext } from "Components/ui/pagination"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useRecoilValue } from "recoil"
 
 export function HomePage() {
+  const navigate = useNavigate()
   const { isAuthenticated } = useRecoilValue(authAtom)
   const [blogs, setBlogs] = useState<Blog[]>([])
 
@@ -31,7 +33,7 @@ export function HomePage() {
           <div
             className="absolute transitiona-all duration-1000 opacity-50 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt">
           </div>
-          <a href="/write" title="Write new blog"
+          <a onClick={() => navigate("/write")} title="Write new blog"
             className="relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-gray-900 transition-all duration-200 bg-white font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
             role="button">Write new blog
           </a>
@@ -53,7 +55,8 @@ export function HomePage() {
                 {blog.content.substring(0, 140) + "..."}
               </p>
               <a
-                href={`/blog/${blog.id}`}
+                onClick={() => navigate(`/blog/${blog.id}`)}
+                // href={`/blog/${blog.id}`}
                 className="inline-flex items-center text-primary hover:text-blue-800"
               >
                 Read More

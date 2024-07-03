@@ -37,7 +37,7 @@ export function Signin() {
                     <h1 className="mb-2 text-3xl font-bold">Login to your account</h1>
                     <p className="mb-6 text-gray-500">
                         Dont have an account?{" "}
-                        <a href="/signup" className="text-blue-500">
+                        <a onClick={() => navigate("/signup")} className="text-blue-500">
                             SignUp
                         </a>
                     </p>
