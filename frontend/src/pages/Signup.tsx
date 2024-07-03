@@ -4,10 +4,15 @@ import { Button } from "Components/ui/button"
 import { Success } from "@/lib/toast"
 import { handleApiError } from "@/lib/handleApiError"
 import { signUp } from "@/services/AuthService"
-import Quote from "../assets/quote.svg"
+import { authAtom } from "@/store/authAtom"
+import Quote from "@/assets/quote.svg"
+import { useNavigate } from "react-router-dom"
+import { useRecoilState } from "recoil"
 
 
 export function Signup() {
+    const navigate = useNavigate()
+    const [authState, setAuthState] = useRecoilState(authAtom)
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -15,10 +20,13 @@ export function Signup() {
     const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
-            const response = await signUp({ username, email, password })
-            if (response.token) {
-                Success("Account created successfully")
-            }
+            await signUp({ username, email, password })
+            navigate("/")
+            Success("Account created successfully")
+            setAuthState({
+                ...authState,
+                isAuthenticated: true
+            })
         } catch (error) {
             handleApiError(error)
         }
@@ -31,7 +39,7 @@ export function Signup() {
                     <h1 className="mb-2 text-3xl font-bold">Create an account</h1>
                     <p className="mb-6 text-gray-500">
                         Already have an account?{" "}
-                        <a href="/signin" className="text-blue-500">
+                        <a href="/" className="text-blue-500">
                             Login
                         </a>
                     </p>
