@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { prismaMiddleware } from './middlewares/prisma'
 import { authMiddleware } from './middlewares/auth'
 import { HonoBindings } from './config/types'
-import { userRouter } from './routes/user'
+import { authRouter } from './routes/auth'
 import { blogRouter } from './routes/blog'
 import { cors } from 'hono/cors'
 
@@ -10,9 +10,11 @@ const app = new Hono<HonoBindings>().basePath('/api/v1')
 
 //middlewares
 app.use('*', prismaMiddleware )
-app.use('*', cors())
+app.use(cors({origin(_origin, c) {
+    return c.env.FRONTEND_URL
+}, credentials: true}))
 
-app.route('/user', userRouter)
+app.route('/auth', authRouter)
 app.route('/blog', blogRouter)
 
 
