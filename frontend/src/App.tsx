@@ -4,6 +4,7 @@ import AuthLayout from '@/Layout/AuthLayout'
 import PublicLayout from '@/Layout/PublicLayout'
 import { authAtom } from '@/store/authAtom'
 import { useRecoilValue } from 'recoil'
+import { PublicErrorPage } from './pages/PublicErrorPage'
 
 const authRouter = createBrowserRouter([
     {
@@ -37,6 +38,10 @@ const unAuthRouter = createBrowserRouter([
             {
                 path: '/',
                 element: <HomePage />,
+            },
+            {
+                path: '/blog/*',
+                element: <PublicErrorPage />,
             }
         ]
     },
