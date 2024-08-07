@@ -14,7 +14,7 @@ export function BlogView() {
     const fetchBlog = async () => {
         try {
             const response = await getBlog(id)
-            document.title = response.blog.title
+            // document.title = response.blog.title
             setBlog(response)
         } catch (error) {
             handleApiError(error)
