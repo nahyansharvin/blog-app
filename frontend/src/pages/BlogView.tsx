@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { handleApiError } from "@/lib/handleApiError"
+import useLoader from "@/lib/loader"
 import { SingleBlogResponse } from "@/lib/types"
 import { getBlog } from "@/services/BlogService"
 import { useEffect, useState } from "react"
@@ -8,17 +9,20 @@ import { useLocation, useNavigate } from "react-router-dom"
 export function BlogView() {
     const navigate = useNavigate()
     const location = useLocation()
+    const { loader } = useLoader()
     const id = location.pathname.split("/")[2]
     const [blog, setBlog] = useState<SingleBlogResponse | null>(null)
 
     const fetchBlog = async () => {
+        loader()
         try {
             const response = await getBlog(id)
-            document.title = response.blog.title
+            // document.title = response.blog.title
             setBlog(response)
         } catch (error) {
             handleApiError(error)
         }
+        loader()
     }
 
     useEffect(() => {
