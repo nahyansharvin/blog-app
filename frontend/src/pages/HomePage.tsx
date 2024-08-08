@@ -1,4 +1,5 @@
 import { handleApiError } from "@/lib/handleApiError"
+import useLoader from "@/lib/loader"
 import { Blog } from "@/lib/types"
 import { getAllBlogs } from "@/services/BlogService"
 import { authAtom } from "@/store/authAtom"
@@ -9,17 +10,20 @@ import { useNavigate } from "react-router-dom"
 import { useRecoilValue } from "recoil"
 
 export function HomePage() {
+  const { loader } = useLoader()
   const navigate = useNavigate()
   const { isAuthenticated } = useRecoilValue(authAtom)
   const [blogs, setBlogs] = useState<Blog[]>([])
 
   const fetchBlogs = async () => {
+    loader()
     try {
       const response = await getAllBlogs()
       setBlogs(response.blogs)
     } catch (error) {
       handleApiError(error)
     }
+    loader()
   }
 
   useEffect(() => {
