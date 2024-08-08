@@ -23,8 +23,8 @@ const PublicLayout = () => {
             <main>
                 <Outlet />
             </main>
-            <footer className=" bottom-0 w-full bg-muted text-muted-foreground py-4 px-6 md:px-8 lg:px-12 mt-auto">
-                <div className="container mx-auto text-center">
+            <footer className=" bottom-0 w-full bg-muted text-muted-foreground py-2 px-6 md:px-8 lg:px-12 mt-auto">
+                <div className="container mx-auto text-center text-xs">
                     <p>&copy; 2024 Blog Website. All rights reserved.</p>
                 </div>
             </footer>

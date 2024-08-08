@@ -61,7 +61,7 @@ export function HomePage() {
               <a
                 onClick={() => navigate(`/blog/${blog.id}`)}
                 // href={`/blog/${blog.id}`}
-                className="inline-flex items-center text-primary hover:text-blue-800"
+                className="inline-flex items-center text-primary hover:text-blue-800 cursor-pointer"
               >
                 Read More
                 <ArrowRightIcon className="w-4 h-4 ml-1" />
